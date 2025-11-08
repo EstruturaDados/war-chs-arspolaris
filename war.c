@@ -31,7 +31,7 @@
 
 // --- Função Principal (main) ---
 // Função principal que orquestra o fluxo do jogo, chamando as outras funções em ordem.
-int main() {
+//int main() {
     // 1. Configuração Inicial (Setup):
     // - Define o locale para português.
     // - Inicializa a semente para geração de números aleatórios com base no tempo atual.
@@ -51,8 +51,8 @@ int main() {
     // 3. Limpeza:
     // - Ao final do jogo, libera a memória alocada para o mapa para evitar vazamentos de memória.
 
-    return 0;
-}
+//    return 0;
+//}
 
 // --- Implementação das Funções ---
 
@@ -96,3 +96,97 @@ int main() {
 
 // limparBufferEntrada():
 // Função utilitária para limpar o buffer de entrada do teclado (stdin), evitando problemas com leituras consecutivas de scanf e getchar.
+
+#include <stdio.h>
+#include <string.h>
+
+//constantes globais
+#define MAX_TERRITORIOS 5
+// estrutura do territorio 
+struct Territorio{
+    char nome[30];
+    char cor[10];
+    int tropas;
+};
+
+// função de limpar buffer
+void limparBufferEntrada() {
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF);
+}
+
+//função principal
+int main(){
+    struct Territorio territorios[MAX_TERRITORIOS];
+    int totalTerritorios = 0;
+    int opcao;
+
+    //laço principal
+    do {
+        printf("--------------------------------\n");
+        printf("1 - Cadastrar territorio\n");
+        printf("2 - Listar territórios \n");
+        printf("0 - Sair\n");
+        printf("Escolha uma opção: ");
+
+        //leitura
+        scanf("%d", &opcao);
+        limparBufferEntrada();
+
+        //processamento de opção
+        switch (opcao) {
+            case 1:
+            if(totalTerritorios < MAX_TERRITORIOS) {
+                printf("\n --- Cadastro de territorio %d ---\n", totalTerritorios + 1);
+
+                printf("digite o nome do territorio: ");
+                fgets(territorios[totalTerritorios].nome, 30, stdin);
+
+                printf("Cor do exercito: ");
+                fgets(territorios[totalTerritorios].cor, 10, stdin);
+
+                territorios[totalTerritorios].nome[strcspn(territorios[totalTerritorios].nome, "\n")] = 0;
+                territorios[totalTerritorios].cor[strcspn(territorios[totalTerritorios].cor, "\n")] = 0;
+
+                printf("Numero de tropas: ");
+                scanf("%d", &territorios[totalTerritorios].tropas);
+                limparBufferEntrada();
+
+                totalTerritorios++;
+
+                printf("\nTerritorio cadastrado\n");               
+            } else {
+                printf("todos os territorios cadastrados (maximo %d).\n", MAX_TERRITORIOS);
+            }
+                break;
+            
+            case 2: //listar territorios
+                printf("Lista de territorios cadastrados\n");
+
+                if (totalTerritorios == 0){
+                    printf("nenhum territorio cadastrado ainda\n");}
+                else {
+                    for (int i = 0; i < totalTerritorios; i++) {
+                        printf("--------------------------\n");
+                        printf("Territorio %d\n", i+1);
+                        printf("Nome: %s\n", territorios[i].nome);
+                        printf("Cor: %s\n", territorios[i].cor);
+                        printf("Tropas: %d\n", territorios[i].tropas);
+                    }
+                }
+                
+                break;
+
+            case 0:
+                printf("\nSaindo do sistema\n");
+                break;
+            
+            default: //opção invalida
+                printf("\nOpção invalida, tente novamente\n");
+                break;
+
+        }
+    } while (opcao !=0);
+    return 0; //fim do programa
+
+}
